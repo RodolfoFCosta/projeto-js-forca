@@ -2,6 +2,7 @@ let tentativas = 6;
 let palavraSecretaCategoria;
 let palavraSecretaSort;
 let listaDinamica = [];
+let jogarNovamente = true;
 
 const palavras = [
 
@@ -106,7 +107,7 @@ const palavras = [
     },
 
     palavra021 = {
-        nome: "A MALDIÇAO DA RESIDENCIA HILL",
+        nome: "DUNA",
         categoria: "TV E CINEMA"
     },
 ];
@@ -162,18 +163,23 @@ function mostrarPalavra() {
 function verifcaLetraEscolhida(letra) {
     document.getElementById("tecla-" + letra).disabled = true;
     if (tentativas > 0) {
-        mudarStyleLetra("tecla-" + letra);
+        mudarStyleLetra("tecla-" + letra, false);
         comparaListas(letra);
         mostrarPalavra();
     }
 
 }
 
-function mudarStyleLetra(tecla) {
-    document.getElementById(tecla).style.background = "#540054";
-    document.getElementById(tecla).style.color = "#fff";
-}
+function mudarStyleLetra(tecla, cond) {
+    if (cond == false) {
+        document.getElementById(tecla).style.background = "#540054";
+        document.getElementById(tecla).style.color = "#fff";
+    } else {
+        document.getElementById(tecla).style.background = "#0cef0c";
+        document.getElementById(tecla).style.color = "#fff";
+    }
 
+}
 
 function comparaListas(letra) {
 
@@ -184,10 +190,11 @@ function comparaListas(letra) {
 
         if (tentativas == 0) {
             abreModal("Ops!", "Não foi dessa vez... A palavra correta era <br>" + palavraSecretaSort);
+            botaoReiniciarNovoJogo()
         }
 
     } else {
-
+        mudarStyleLetra("tecla-" + letra, true);
         for (i = 0; i < palavraSecretaSort.length; i++) {
 
             if (palavraSecretaSort[i] == letra) {
@@ -206,11 +213,25 @@ function comparaListas(letra) {
 
     if (vitoria == true) {
         abreModal("PARABÉNS!", " Você Venceu (❁´◡`❁)");
+        tentativas = 0;
+        botaoReiniciarNovoJogo()
     }
-
-
 };
 
+async function botaoReiniciarNovoJogo() {
+    while (jogarNovamente == true) {
+        document.getElementById("btn-restart").style.backgroundColor = '#aaa';
+        document.getElementById("btn-restart").style.scale = 1.3;
+        await atraso(500)
+        document.getElementById("btn-restart").style.backgroundColor = '#fdfdfd';
+        document.getElementById("btn-restart").style.scale = 1;
+        await atraso(300)
+    }
+}
+
+async function atraso(tempo) {
+    return new Promise(x => setTimeout(x, tempo));
+}
 
 function carregaImg() {
     switch (tentativas) {
